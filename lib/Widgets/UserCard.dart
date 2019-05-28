@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:all_posts/Models/User.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:all_posts/Widgets/AlbumListWidget.dart';
 
 class UserCard extends StatelessWidget{
 
@@ -14,7 +15,7 @@ class UserCard extends StatelessWidget{
     Container
     (
       margin: EdgeInsets.only(bottom: 10),
-      height: 200,
+      height: 310,
       child: 
       Card
       (   
@@ -23,7 +24,7 @@ class UserCard extends StatelessWidget{
         child: 
         Container
         (
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(5),
           child: 
           Column
           (
@@ -45,6 +46,12 @@ class UserCard extends StatelessWidget{
                   Text(user.website, style: TextStyle(fontSize: 20))
                 ],
               ),
+              Container
+              (
+                height: 210,
+                width: 400,
+                child: AlbumListWidget(this.user),
+              )
             ],
           )
         ) 

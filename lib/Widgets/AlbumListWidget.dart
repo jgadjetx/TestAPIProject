@@ -15,35 +15,31 @@ class AlbumListWidget extends StatelessWidget{
 
     final data = Provider.of<DataProvider>(context);
 
-    return ChangeNotifierProvider<DataProvider>
+    return 
+    FutureBuilder<List<Album>>
     (
-      builder: (context) => DataProvider(),
-      child: 
-      FutureBuilder<List<Album>>
-      (
-        future: data.getAlbums(this.user.id),
-        builder: (context, snapshot)
-        {
-          if(snapshot.hasData){
-            return
-            ListView.builder
-            (
-              scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data.length,
-              itemBuilder: (context,index)
-              {
-                return
-                ThumbnailAndTitle(snapshot.data[index]);
-              },
-            );
-           
-          }
-          else{
-            return
-            Text("Loading...");
-          }
+      future: data.getAlbums(this.user.id),
+      builder: (context, snapshot)
+      {
+        if(snapshot.hasData){
+          return
+          ListView.builder
+          (
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data.length,
+            itemBuilder: (context,index)
+            {
+              return
+              ThumbnailAndTitle(snapshot.data[index]);
+            },
+          );
+          
         }
-      )
+        else{
+          return
+          Text("Loading...");
+        }
+      }
     );
   }
 }

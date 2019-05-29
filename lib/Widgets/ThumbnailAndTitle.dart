@@ -14,49 +14,43 @@ class ThumbnailAndTitle extends StatelessWidget{
 
     final data = Provider.of<DataProvider>(context);
 
-    return ChangeNotifierProvider<DataProvider>
+    return 
+    FutureBuilder<List<Photo>>
     (
-      builder: (context) => DataProvider(),
-      child: 
-      FutureBuilder<List<Photo>>
-      (
-        future: data.getThumbnail(),
-        builder: (context,snapshot){
+      future: data.getThumbnail(),
+      builder: (context,snapshot){
 
-          if(snapshot.hasData){
-            return
-            Container
+        if(snapshot.hasData){
+          return
+          Container
+          (
+            margin: EdgeInsets.only(right: 5,top: 5),
+            width: 100,
+            height: 150,
+            child: 
+            Column
             (
-              margin: EdgeInsets.only(right: 5,top: 5),
-              width: 100,
-              height: 150,
-              child: 
-              Column
-              (
-                children: <Widget>
-                [
-                  Image.network
-                  (
-                    snapshot.data[album.id-1].thumbnailUrl,
-                    width: 100,
-                    height: 100,
-                  ),
-                  Text
-                  (
-                    album.title,        
-                  )
-                ],
-              )
-            );
-          }
-          else{
-            return
-            Text("");
-          }
-        },
-
-      )
+              children: <Widget>
+              [
+                Image.network
+                (
+                  snapshot.data[album.id-1].thumbnailUrl,
+                  width: 100,
+                  height: 100,
+                ),
+                Text
+                (
+                  album.title,        
+                )
+              ],
+            )
+          );
+        }
+        else{
+          return
+          Text("");
+        }
+      },
     );
-
   }
 }

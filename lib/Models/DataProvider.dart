@@ -26,14 +26,18 @@ class DataProvider with ChangeNotifier {
   }
 
   Future<User> getUser(int userID) async {
+
     List<User> allUsers = await getUsers();
     User user;
 
     for (int i = 0; i < allUsers.length; i++) {
+
       if (allUsers[i].id == userID) {
         user = allUsers[i];
         break;
+ 
       }
+
     }
 
     return user;

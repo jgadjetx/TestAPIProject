@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget{
       ChangeNotifierProvider<DataProvider>
       (
         builder: (context) => DataProvider(),
-        child: Posts(),
+        child: Users(),
       )  
     );
   }

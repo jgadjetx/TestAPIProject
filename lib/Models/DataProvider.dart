@@ -11,6 +11,8 @@ class DataProvider with ChangeNotifier {
 
   List<User> listAllUsers = List<User>();
   List<Comment> listAllComments = List<Comment>();
+  List<Album> listAllAlbums = List<Album>();
+  List<Photo> listAllThumbanails = List<Photo>();
 
   Future<List<User>> getUsers() async {
   
@@ -106,64 +108,82 @@ class DataProvider with ChangeNotifier {
 
   }
 
-  Future<List<Album>> getAlbums(int userID) async {
-
-    List<Album> allAlbums = List();
-    List<Album> userAlbumList = List();
+  Future<void> getAllAlbums() async {
 
     String url = "https://jsonplaceholder.typicode.com/albums";
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-
-      allAlbums = (json.decode(response.body) as List)
+      
+      listAllAlbums = (json.decode(response.body) as List)
           .map((data) => Album.fromJson(data))
           .toList();
 
-      for (int i = 0; i < allAlbums.length; i++) {
+    }
+    else{
 
-        if (allAlbums[i].userId == userID) {
-
-          userAlbumList.add(allAlbums[i]);
-        }
-
-      } 
- 
-      return userAlbumList;
-    } else {
       throw Exception("Failed To Load");
     }
 
   }
 
-  Future<List<Photo>> getThumbnail() async {
+  Future<List<Album>> getAlbums(int userID) async {
 
-    List<Photo> photoList = List();
-    List<Photo> thumbnailList = List();
-    int tracker = 0;
+    List<Album> userAlbumList = List();
 
-    String url = "https://jsonplaceholder.typicode.com/photos";
-    final response = await http.get(url);
+    if(listAllAlbums.isEmpty){
+      await getAllAlbums();
+    }
 
-    if (response.statusCode == 200) {
+    for (int i = 0; i < listAllAlbums.length; i++) {
 
-      photoList = (json.decode(response.body) as List)
-          .map((data) => Photo.fromJson(data))
-          .toList();
+      if (listAllAlbums[i].userId == userID) {
 
-      for (int i = 0; i < photoList.length; i++) {
-
-        if (photoList[i].albumId != tracker) {
-          thumbnailList.add(photoList[i]);
-          tracker = photoList[i].albumId;
-        }
-
+        userAlbumList.add(listAllAlbums[i]);
       }
 
-      return thumbnailList;
     } 
-    else {
-      throw Exception("Failed To Load");
+ 
+    return userAlbumList;
+    
+  }
+
+
+
+  Future<List<Photo>> getThumbnail() async {
+
+    if(listAllThumbanails.isEmpty){
+      
+      List<Photo> photoList = List();
+      int tracker = 0;
+
+      String url = "https://jsonplaceholder.typicode.com/photos";
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+
+        photoList = (json.decode(response.body) as List)
+            .map((data) => Photo.fromJson(data))
+            .toList();
+
+        for (int i = 0; i < photoList.length; i++) {
+
+          if (photoList[i].albumId != tracker) {
+            listAllThumbanails.add(photoList[i]);
+            tracker = photoList[i].albumId;
+          }
+
+        }
+
+        return listAllThumbanails;
+      } 
+      else {
+        throw Exception("Failed To Load");
+      }
+    }
+    else{
+      
+      return listAllThumbanails;
     }
 
   }

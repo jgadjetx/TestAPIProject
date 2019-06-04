@@ -17,6 +17,12 @@ class CommentsWidget extends StatelessWidget{
     return 
     Container
     (
+      decoration: 
+      BoxDecoration
+      (
+        color: Colors.lightGreenAccent,
+        borderRadius: BorderRadius.all(Radius.circular(10.0))
+      ),
       height: 300,
       child: 
       FutureBuilder<List<Comment>>

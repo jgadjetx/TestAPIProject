@@ -47,7 +47,7 @@ class PostCardWithComments extends StatelessWidget{
                     builder: (context,snapshot){
                       if(snapshot.hasData){
                         return             
-                        Text(snapshot.data.username,style: TextStyle(fontSize: 20));
+                        Text(snapshot.data.name,style: TextStyle(fontSize: 20));
                       }
                       else
                       {

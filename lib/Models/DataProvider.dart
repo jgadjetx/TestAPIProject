@@ -9,17 +9,21 @@ import 'package:http/http.dart' as http;
 
 class DataProvider with ChangeNotifier {
 
-  Future<List<User>> getUsers() async {
-    List<User> list = List();
+  List<User> listAllUsers = List<User>();
 
+  Future<List<User>> getUsers() async {
+  
     String url = "https://jsonplaceholder.typicode.com/users";
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      list = (json.decode(response.body) as List)
+
+      listAllUsers = (json.decode(response.body) as List)
           .map((data) => User.fromJson(data))
           .toList();
-      return list;
+
+      return listAllUsers;
+
     } else {
       throw Exception("Failed To Load");
     }
@@ -27,13 +31,17 @@ class DataProvider with ChangeNotifier {
 
   Future<User> getUser(int userID) async {
 
-    List<User> allUsers = await getUsers();
     User user;
 
-    for (int i = 0; i < allUsers.length; i++) {
+    if(this.listAllUsers.isEmpty){
+      
+      await getUsers();
+    }
 
-      if (allUsers[i].id == userID) {
-        user = allUsers[i];
+    for (int i = 0; i < this.listAllUsers.length; i++) {
+
+      if (this.listAllUsers[i].id == userID) {
+        user = this.listAllUsers[i];
         break;
  
       }
@@ -60,6 +68,7 @@ class DataProvider with ChangeNotifier {
   }
 
   Future<List<Comment>> getComments(int postID) async {
+    
     List<Comment> allComments = List();
     List<Comment> postComments = List();
 

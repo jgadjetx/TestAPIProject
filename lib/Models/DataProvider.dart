@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 class DataProvider with ChangeNotifier {
 
   List<User> listAllUsers = List<User>();
+  List<Comment> listAllComments = List<Comment>();
 
   Future<List<User>> getUsers() async {
   
@@ -67,29 +68,42 @@ class DataProvider with ChangeNotifier {
     }
   }
 
-  Future<List<Comment>> getComments(int postID) async {
-    
-    List<Comment> allComments = List();
-    List<Comment> postComments = List();
+  Future<void> getComments() async {
 
     String url = "https://jsonplaceholder.typicode.com/comments";
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      allComments = (json.decode(response.body) as List)
+
+      listAllComments = (json.decode(response.body) as List)
           .map((data) => Comment.fromJson(data))
           .toList();
+    }
+    else{
 
-      for (int i = 0; i < allComments.length; i++) {
-        if (allComments[i].postId == postID) {
-          postComments.add(allComments[i]);
-        }
-      }
-
-      return postComments;
-    } else {
       throw Exception("Failed To Load");
     }
+
+  }
+
+  Future<List<Comment>> getPostComments(int postID) async {
+
+    List<Comment> postComments = List();
+
+    if(listAllComments.isEmpty){
+
+      await getComments();
+
+    }
+
+    for (int i = 0; i < listAllComments.length; i++) {
+      if (listAllComments[i].postId == postID) {
+        postComments.add(listAllComments[i]);
+      }
+    }
+
+    return postComments;
+
   }
 
   Future<List<Album>> getAlbums(int userID) async {

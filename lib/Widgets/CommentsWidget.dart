@@ -21,7 +21,7 @@ class CommentsWidget extends StatelessWidget{
       child: 
       FutureBuilder<List<Comment>>
       (
-        future: data.getComments(post.id),
+        future: data.getPostComments(post.id),
         builder: (context, snapshot)
         {
           if(snapshot.hasData){

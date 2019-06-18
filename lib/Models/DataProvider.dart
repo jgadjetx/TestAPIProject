@@ -30,6 +30,7 @@ class DataProvider with ChangeNotifier {
     } else {
       throw Exception("Failed To Load");
     }
+
   }
 
   Future<User> getUser(int userID) async {

@@ -10,7 +10,10 @@ class Posts extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
-    return _Posts();
+    
+    return 
+    _Posts();
+    
   }
 
 }
@@ -71,6 +74,7 @@ class _Posts extends State<Posts>{
                       future: data.getPosts(),
                       builder: (context,snapshot)
                       {
+
                         if(snapshot.hasData){
                           return
                           ListView.builder
@@ -86,7 +90,7 @@ class _Posts extends State<Posts>{
                                 return
                                 PostCard(snapshot.data[index]);
                               }
-                               
+                              
                             },
                           );
                         }
@@ -105,5 +109,6 @@ class _Posts extends State<Posts>{
         )
       ),
     );
+    
   }
 }

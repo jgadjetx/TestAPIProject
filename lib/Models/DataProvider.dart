@@ -13,6 +13,27 @@ class DataProvider with ChangeNotifier {
   List<Comment> listAllComments = List<Comment>();
   List<Album> listAllAlbums = List<Album>();
   List<Photo> listAllThumbanails = List<Photo>();
+  List<Post> currentPosts = List();
+  List<Post> nextPosts = List();
+
+  int page = 1;
+  bool hasNextPage = true;
+
+  void nextPage(){
+    page++;
+  }
+
+  void prevPage(){
+    
+    if(page != 1){
+      page--;
+    }
+  
+  }
+
+  int get getPage {
+    return page;
+  }
 
   Future<List<User>> getUsers() async {
   
@@ -55,21 +76,54 @@ class DataProvider with ChangeNotifier {
     return user;
   }
 
-  Future<List<Post>> getPosts() async {
-    List<Post> list = List();
+  
 
-    String url = "https://jsonplaceholder.typicode.com/posts";
+  Future<List<Post>> getPosts() async {
+
+
+    String url = "https://jsonplaceholder.typicode.com/posts?_page=$page";
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      list = (json.decode(response.body) as List)
+
+      currentPosts = (json.decode(response.body) as List)
           .map((data) => Post.fromJson(data))
           .toList();
-      return list;
-    } else {
+      
+      getNextPosts();
+      notifyListeners();
+      return currentPosts;
+    } 
+    else {
       throw Exception("Failed To Load");
-    }
+    } 
+    
   }
+
+  Future getNextPosts() async {
+    
+    String url = "https://jsonplaceholder.typicode.com/posts?_page=" + (page+1).toString();
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+
+      nextPosts = (json.decode(response.body) as List)
+          .map((data) => Post.fromJson(data))
+          .toList();
+
+      if(nextPosts.isEmpty){
+        hasNextPage = false;
+      }
+      else{
+        hasNextPage = true;
+      }
+    } 
+    else {
+      throw Exception("Failed To Load");
+    } 
+    
+  }
+
 
   Future<void> getComments() async {
 

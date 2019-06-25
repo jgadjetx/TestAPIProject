@@ -7,8 +7,8 @@ import 'ThumbnailAndTitle.dart';
 
 class AlbumListWidget extends StatelessWidget{
 
-  final User user;
-  AlbumListWidget(this.user);
+  final int userID;
+  AlbumListWidget(this.userID);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class AlbumListWidget extends StatelessWidget{
     return 
     FutureBuilder<List<Album>>
     (
-      future: data.getAlbums(this.user.id),
+      future: data.getAlbums(this.userID),
       builder: (context, snapshot)
       {
         if(snapshot.hasData){

@@ -1,3 +1,4 @@
+import 'package:all_posts/Screens/User.dart';
 import 'package:all_posts/Widgets/CommentsWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:all_posts/Models/Post.dart';
@@ -6,6 +7,7 @@ import 'package:all_posts/Models/DataProvider.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:all_posts/Models/User.dart';
 import 'package:all_posts/Models/Comment.dart';
+import 'package:all_posts/Screens/User.dart';
 
 class PostCard extends StatelessWidget{
   
@@ -48,13 +50,27 @@ class PostCard extends StatelessWidget{
                     future: data.getUser(this.post.userId),
                     builder: (context,snapshot){
                       if(snapshot.hasData){
-                        return             
-                        Text(snapshot.data.name,style: TextStyle(fontSize: 20));
+                        return   
+                        GestureDetector
+                        (
+                          child: Text(snapshot.data.name,style: TextStyle(fontSize: 20)),
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context){                
+                              return 
+                              ChangeNotifierProvider
+                              (
+                                builder: (context) => DataProvider(),
+                                child: Users(this.post.userId)
+                              );
+                            }));
+                          },
+                        );    
+                        
                       }
                       else
                       {
                         return
-                        Text("loading");
+                        Text("");
                       }
                     },
                   )

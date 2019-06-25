@@ -50,7 +50,7 @@ class UserCard extends StatelessWidget{
               (
                 height: 210,
                 width: 400,
-                child: AlbumListWidget(this.user),
+                child: AlbumListWidget(this.user.id),
               )
             ],
           )

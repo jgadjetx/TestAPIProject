@@ -9,8 +9,8 @@ import 'package:http/http.dart' as http;
 
 class DataProvider with ChangeNotifier {
 
+  List<Comment> listOfPostComments = List<Comment>();
   List<User> listAllUsers = List<User>();
-  List<Comment> listAllComments = List<Comment>();
   List<Album> listAllAlbums = List<Album>();
   List<Photo> listAllThumbanails = List<Photo>();
   List<Post> currentPosts = List();
@@ -35,45 +35,22 @@ class DataProvider with ChangeNotifier {
     return page;
   }
 
-  Future<List<User>> getUsers() async {
-  
-    String url = "https://jsonplaceholder.typicode.com/users";
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-
-      listAllUsers = (json.decode(response.body) as List)
-          .map((data) => User.fromJson(data))
-          .toList();
-
-      return listAllUsers;
-
-    } else {
-      throw Exception("Failed To Load");
-    }
-
-  }
 
   Future<User> getUser(int userID) async {
 
     User user;
 
-    if(this.listAllUsers.isEmpty){
-      
-      await getUsers();
+    String url = "https://jsonplaceholder.typicode.com/users?id=$userID";
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return user = User.fromJson(json.decode(response.body)[0]);
+    } 
+    else 
+    {
+      throw Exception("Failed To Load");
     }
 
-    for (int i = 0; i < this.listAllUsers.length; i++) {
-
-      if (this.listAllUsers[i].id == userID) {
-        user = this.listAllUsers[i];
-        break;
- 
-      }
-
-    }
-
-    return user;
   }
 
   
@@ -125,16 +102,19 @@ class DataProvider with ChangeNotifier {
   }
 
 
-  Future<void> getComments() async {
+  Future<List<Comment>> getComments(int postID) async {
 
-    String url = "https://jsonplaceholder.typicode.com/comments";
+    String url = "https://jsonplaceholder.typicode.com/comments?postId=$postID";
+
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
 
-      listAllComments = (json.decode(response.body) as List)
+      listOfPostComments = (json.decode(response.body) as List)
           .map((data) => Comment.fromJson(data))
           .toList();
+
+      return listOfPostComments;
     }
     else{
 
@@ -143,25 +123,7 @@ class DataProvider with ChangeNotifier {
 
   }
 
-  Future<List<Comment>> getPostComments(int postID) async {
 
-    List<Comment> postComments = List();
-
-    if(listAllComments.isEmpty){
-
-      await getComments();
-
-    }
-
-    for (int i = 0; i < listAllComments.length; i++) {
-      if (listAllComments[i].postId == postID) {
-        postComments.add(listAllComments[i]);
-      }
-    }
-
-    return postComments;
-
-  }
 
   Future<void> getAllAlbums() async {
 

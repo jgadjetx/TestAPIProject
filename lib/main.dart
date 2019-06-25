@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:all_posts/Models/DataProvider.dart';
-import 'package:all_posts/Screens/Users.dart';
 import 'package:all_posts/Screens/Posts.dart';
-import 'Widgets/BigButton.dart';
 
 
 void main() => runApp(MyApp());
@@ -23,55 +21,14 @@ class MyApp extends StatelessWidget{
         SafeArea
         (
           child: 
-          Builder
+          ChangeNotifierProvider<DataProvider>
           (
-            builder:(context)=>
-            Center
-            (
-              child: 
-              Column
-              (
-
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>
-                [
-                  BigButton
-                  (
-                    text: "Posts",
-                    onPressed: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (context){
-                        return
-                        ChangeNotifierProvider<DataProvider>
-                        (
-                          builder: (context) => DataProvider(),
-                          child: Posts()
-                        );
-                        
-                      } ));
-                    }
-                  ),
-                  BigButton
-                  (
-                    text: "Users",
-                    onPressed: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (context){
-                        return
-                        ChangeNotifierProvider<DataProvider>
-                        (
-                          builder: (context) => DataProvider(),
-                          child: Users()
-                        );
-                        
-                      } ));
-                    }
-                  ),
-                ],
-              )
-            )
+            builder: (context) => DataProvider(),
+            child: Posts()
           )
-          
         )
       )  
     );
   }
 }
+

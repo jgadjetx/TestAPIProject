@@ -1,11 +1,11 @@
-import 'package:all_posts/Widgets/CommentsWidget.dart';
+import 'package:all_posts/Screens/User.dart';
 import 'package:flutter/material.dart';
 import 'package:all_posts/Models/Post.dart';
 import 'package:provider/provider.dart';
 import 'package:all_posts/Models/DataProvider.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:all_posts/Models/User.dart';
-import 'package:all_posts/Models/Comment.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 
 class PostCard extends StatelessWidget{
   
@@ -19,74 +19,91 @@ class PostCard extends StatelessWidget{
     final data = Provider.of<DataProvider>(context);
 
     return 
-    Container
+    FutureBuilder<User>
     (
-      margin: EdgeInsets.only(bottom: 10),
-
-      child: 
-      Card
-      (
-        elevation: 5,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
-        child: 
-        Container
-        (
-          margin: EdgeInsets.only(bottom: 10),
-          padding: EdgeInsets.all(10),
-          child: 
-          Column
+      future: data.getUser(this.post.userId),
+      builder: (context,snapshot)
+      {
+        if(snapshot.hasData){
+          return
           (
-            children: <Widget>
-            [
-              Row
+            Container
+            (
+              margin: EdgeInsets.only(bottom: 10),
+              child: 
+              Card
               (
-                children: <Widget>
-                [
-                  Icon(MdiIcons.account,size: 30),
-                  FutureBuilder<User>
+                elevation: 5,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
+                child: 
+                Container
+                (
+                  margin: EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.all(10),
+                  child: 
+                  Column
                   (
-                    future: data.getUser(this.post.userId),
-                    builder: (context,snapshot){
-                      if(snapshot.hasData){
-                        return             
-                        Text(snapshot.data.name,style: TextStyle(fontSize: 20));
-                      }
-                      else
-                      {
-                        return
-                        Text("loading");
-                      }
-                    },
-                  )
-                ],
+                    children: <Widget>
+                    [
+                      Row
+                      (
+                        children: <Widget>
+                        [
+                          Icon(MdiIcons.account,size: 30),
+                          GestureDetector
+                          (
+                            child: Text(snapshot.data.name,style: TextStyle(fontSize: 20)),
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context){                
+                                return 
+                                ChangeNotifierProvider
+                                (
+                                  builder: (context) => DataProvider(),
+                                  child: Users(this.post.userId)
+                                );
+                              }));
+                            },
+                          )
+                        ],
+                      ),
+                      Row
+                      (
+                        children: <Widget>
+                        [
+                          Container
+                          (
+                            width: 300,
+                            child: Text(this.post.title, style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 20)),
+                          )          
+                        ]               
+                      ),
+                      Row
+                      (             
+                        children: <Widget>
+                        [
+                          Container
+                          (
+                            margin: EdgeInsets.only(top: 20),
+                            width: 300,
+                            child: Text(this.post.body)
+                          )          
+                        ]
+                      ),         
+                    ],
+                  ),
+                )
               ),
-              Row
-              (
-                children: <Widget>
-                [
-                  Container
-                  (
-                    width: 300,
-                    child: Text(this.post.title, style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 20)),
-                  )          
-                ]               
-              ),
-              Row
-              (             
-                children: <Widget>
-                [
-                  Container
-                  (
-                    margin: EdgeInsets.only(top: 20),
-                    width: 300,
-                    child: Text(this.post.body)
-                  )          
-                ]
-              ),         
-            ],
-          ),
-        )
-      ),
+            )
+          );
+
+        }
+        else{
+          return
+          PKCardPageSkeleton(
+            totalLines: 1,
+          );
+        }
+      }
     );
   }
 }

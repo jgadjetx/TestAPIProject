@@ -13,7 +13,6 @@ class Posts extends StatefulWidget{
     
     return 
     _Posts();
-    
   }
 
 }
@@ -21,6 +20,9 @@ class Posts extends StatefulWidget{
 class _Posts extends State<Posts>{
 
   bool showComments = false;
+  bool nextButton = false;
+  bool prevButton = false;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +49,20 @@ class _Posts extends State<Posts>{
                 [
                   Row
                   (
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>
                     [
+                      
+                      RaisedButton
+                      (
+                        
+                        child: Text("Prev Post"),
+                        onPressed: data.getPage == 1 ? null : ()=> data.prevPage()
+                      ),
+                      SizedBox
+                      (
+                        width: 22,
+                      ),
                       Text("Show Comments"),
                       Switch
                       (
@@ -63,7 +77,16 @@ class _Posts extends State<Posts>{
                         },
                         activeTrackColor: Colors.lightGreenAccent, 
                         activeColor: Colors.green,
-                      )
+                      ),
+                      SizedBox
+                      (
+                        width: 22,
+                      ),
+                      RaisedButton
+                      (
+                        child: Text("Next Post"),
+                        onPressed: !data.hasNextPage ? null : ()=> data.nextPage()
+                      ),
                     ],
                   ), 
                   Flexible
@@ -97,11 +120,11 @@ class _Posts extends State<Posts>{
                         else
                         {
                           return
-                          CircularProgressIndicator();
+                          Text("");
                         }
                       }
                     )
-                  )      
+                  ),   
                 ],
               )
             )

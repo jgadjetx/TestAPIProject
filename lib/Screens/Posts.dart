@@ -13,7 +13,6 @@ class Posts extends StatefulWidget{
     
     return 
     _Posts();
-    
   }
 
 }

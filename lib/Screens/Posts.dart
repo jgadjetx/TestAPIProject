@@ -120,7 +120,7 @@ class _Posts extends State<Posts>{
                         else
                         {
                           return
-                          CircularProgressIndicator();
+                          Text("");
                         }
                       }
                     )

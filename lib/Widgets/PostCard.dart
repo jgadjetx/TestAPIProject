@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:all_posts/Models/DataProvider.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:all_posts/Models/User.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 
 class PostCard extends StatelessWidget{
   
@@ -98,7 +99,9 @@ class PostCard extends StatelessWidget{
         }
         else{
           return
-          Text("Loading");
+          PKCardPageSkeleton(
+            totalLines: 1,
+          );
         }
       }
     );

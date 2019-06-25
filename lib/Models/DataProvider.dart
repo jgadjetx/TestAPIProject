@@ -1,3 +1,4 @@
+import 'dart:core';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:all_posts/Models/Album.dart';
@@ -8,13 +9,10 @@ import 'package:all_posts/Models/Comment.dart';
 import 'package:all_posts/Models/ThumbnailAndTitle.dart';
 import 'package:http/http.dart' as http;
 
+
 class DataProvider with ChangeNotifier {
 
-  
   List<Comment> listOfPostComments = List<Comment>();
-  List<User> listAllUsers = List<User>();
-  List<Album> listAllAlbums = List<Album>();
-  List<Photo> listAllThumbanails = List<Photo>();
   List<Post> currentPosts = List();
   List<Post> nextPosts = List();
 
@@ -37,13 +35,17 @@ class DataProvider with ChangeNotifier {
     return page;
   }
 
+  Future<http.Response> makeAPICall(String url) async{
+
+    final response = await http.get(url);
+    
+    return response;
+  }
 
   Future<User> getUser(int userID) async {
-
     User user;
 
-    String url = "https://jsonplaceholder.typicode.com/users?id=$userID";
-    final response = await http.get(url);
+    var response = await makeAPICall("https://jsonplaceholder.typicode.com/users?id=$userID");
 
     if (response.statusCode == 200) {
       return user = User.fromJson(json.decode(response.body)[0]);
@@ -55,13 +57,12 @@ class DataProvider with ChangeNotifier {
 
   }
 
-  
-
   Future<List<Post>> getPosts() async {
 
+    var response = await makeAPICall("https://jsonplaceholder.typicode.com/posts?_page=$page");
 
-    String url = "https://jsonplaceholder.typicode.com/posts?_page=$page";
-    final response = await http.get(url);
+    Map<String, String> headers = response.headers;
+    String linkHeader= headers['link'];
 
     if (response.statusCode == 200) {
 
@@ -69,33 +70,15 @@ class DataProvider with ChangeNotifier {
           .map((data) => Post.fromJson(data))
           .toList();
       
-      getNextPosts();
-      notifyListeners();
-      return currentPosts;
-    } 
-    else {
-      throw Exception("Failed To Load");
-    } 
-    
-  }
-
-  Future getNextPosts() async {
-    
-    String url = "https://jsonplaceholder.typicode.com/posts?_page=" + (page+1).toString();
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-
-      nextPosts = (json.decode(response.body) as List)
-          .map((data) => Post.fromJson(data))
-          .toList();
-
-      if(nextPosts.isEmpty){
-        hasNextPage = false;
-      }
-      else{
+      if(linkHeader.contains('rel="next"')){
         hasNextPage = true;
       }
+      else{
+        hasNextPage = false;
+      }
+
+      notifyListeners();
+      return currentPosts;
     } 
     else {
       throw Exception("Failed To Load");
@@ -106,9 +89,8 @@ class DataProvider with ChangeNotifier {
 
   Future<List<Comment>> getComments(int postID) async {
 
-    String url = "https://jsonplaceholder.typicode.com/comments?postId=$postID";
 
-    final response = await http.get(url);
+    var response = await makeAPICall("https://jsonplaceholder.typicode.com/comments?postId=$postID");
 
     if (response.statusCode == 200) {
 
@@ -126,15 +108,11 @@ class DataProvider with ChangeNotifier {
   }
 
 
-
   Future<List<Album>> getUserAlbums(int userID) async {
 
     List<Album> listOfUserAlbums;
-
-    String url = "https://jsonplaceholder.typicode.com/albums?userId=$userID";
-
-    final response = await http.get(url);
-
+    var response = await makeAPICall("https://jsonplaceholder.typicode.com/albums?userId=$userID");
+  
     if (response.statusCode == 200) {
 
       listOfUserAlbums = (json.decode(response.body) as List)
@@ -164,10 +142,7 @@ class DataProvider with ChangeNotifier {
     for(int i = 0; i < listOfUserAlbums.length; i++){
 
       int albumID = listOfUserAlbums[i].id;
-
-      String url = "https://jsonplaceholder.typicode.com/photos?albumId=$albumID&_limit=1";
-
-      final response = await http.get(url);
+      var response = await makeAPICall("https://jsonplaceholder.typicode.com/photos?albumId=$albumID&_limit=1");
 
       if (response.statusCode == 200) {
 
@@ -188,7 +163,6 @@ class DataProvider with ChangeNotifier {
     return thumbnailAndTitleList;
 
   }
-
 
 
 }

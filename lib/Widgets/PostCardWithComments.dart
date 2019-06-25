@@ -6,6 +6,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:all_posts/Widgets/CommentsWidget.dart';
 import 'package:all_posts/Models/User.dart';
 import 'package:all_posts/Screens/User.dart';
+import 'package:pk_skeleton/pk_skeleton.dart';
 
 
 class PostCardWithComments extends StatelessWidget{
@@ -117,7 +118,9 @@ class PostCardWithComments extends StatelessWidget{
         }
         else{
           return
-          Text("Loading");
+          PKCardPageSkeleton(
+            totalLines: 1,
+          );
         }
       }
     );

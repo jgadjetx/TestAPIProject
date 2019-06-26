@@ -8,6 +8,10 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget{
 
+  int calc(int num){
+    return num * 2;
+  }
+
   @override
   Widget build(BuildContext context) {
     return 

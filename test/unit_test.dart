@@ -13,8 +13,7 @@ void main() {
   MyApp testClass = new MyApp();
 
   test("test calc method", (){
-
     expect(testClass.calc(4), 8);
-
   });
+  
 }

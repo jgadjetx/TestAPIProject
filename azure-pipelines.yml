@@ -13,9 +13,8 @@ steps:
 - script: |
     curl https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.5.4-hotfix.2-stable.tar.xz -o flutter.tar.xz
     tar xf ./flutter.tar.xz
-    export PATH="$PATH:`pwd`/flutter/bin"
   displayName: 'Install Flutter'
 
 - script: |
-    flutter test
+    ./flutter/bin/flutter test
   displayName: 'Run Test'
